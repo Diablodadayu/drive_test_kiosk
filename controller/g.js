@@ -4,6 +4,7 @@ const User = require("../models/user.js");
 
 const g = (req, res) => {
     console.log("Welcome to G_Test page");
+    console.log("[g.js] begin to find user by id: ", req.session.userId);
 
     User.findById(req.session.userId).then((userInfo)=>{
         if (!userInfo) {

@@ -2,6 +2,7 @@ const User = require("../models/user.js");
 
 const g2 = (req, res)=>{
     console.log("Welcome to G2_Test page");
+    console.log("[g2.js] begin to find user by id: ", req.session.userId);
 
     User.findById(req.session.userId).then((userInfo)=>{
         if (!userInfo) {
