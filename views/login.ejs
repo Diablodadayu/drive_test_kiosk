@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en" class="h-100" data-bs-theme="auto">
+  <head>
+    <%- include("layouts/head") %>
+  </head>
+  <body class="d-flex h-100 text-center text-bg-dark">
+
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      <%- include("layouts/header") %>
+
+      <main>
+        <section class="login-form-section">
+          <h2>Login</h2>
+          <% if(errors != null && errors.length >0) {  %>
+                            
+            <% for( var i=0 ; i < errors.length ; i++) { %> 
+                <div class="alert alert-danger">
+                    <%= errors[i]  %>
+                </div>
+            <% }%>
+        
+        <% } %>
+          <form id="login-form" action="/user/login" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="username">Username:</label>
+              <input type="text" id="username" name="username" value="<%= login?.username %>" required>
+              <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input type="password" id="password" name="password" value="<%= login?.password %>" required>
+              <span class="error-message"></span>
+            </div>
+
+            <button class="w-100 btn btn-primary btn-lg" id="login" type="submit">Login</button>
+            
+          </form>
+          <a id="signup" href="">Don't have an account? sign up now!</a>
+        </section>
+
+        <div id="signup-modal" class="modal">
+          <section class="signup-form-section">
+            <h2>Sign up</h2>
+            <% if(errors != null && errors.length >0) {  %>
+                            
+              <% for( var i=0 ; i < errors.length ; i++) { %> 
+                  <div class="alert alert-danger">
+                      <%= errors[i]  %>
+                  </div>
+              <% }%>
+          
+          <% } %>
+            <form id="signup-form">
+              <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="signup_username" name="username" value="<%= register?.username %>" required>
+                <span class="error-message"></span>
+              </div>
+  
+              <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="signup_password" name="password" value="<%= register?.password %>" required>
+                <span class="error-message"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="password">Confirm Password:</label>
+                <input type="password" id="signu_confirmp_password" name="confirm_password" value="<%= register?.password %>" required>
+                <span class="error-message"></span>
+              </div>
+
+              <div class="user-type-dropdown">
+                <label for="user-type-identity-dropdown">User Type</label>
+                <select id="user-type-identity-dropdown" required>
+                    <option value="driver">Driver</option>
+                    <option value="examiner">Examiner</option>
+                    <option value="admin">Admin</option>
+                </select>
+              </div>
+  
+              <button class="w-40 btn btn-primary btn-lg" id="register_btn">Register</button>
+              <button class="w-40 btn btn-dark btn-lg" id="cancel_btn">Cancel</button>
+            </form>
+          </section>
+        </div>
+        <% if(register){ %>
+          <script>
+            document.getElementById("signup-modal").style.display = "block";
+            if (`<%= register.user_type %>`) {
+              document.getElementById("user-type-identity-dropdown").value = `<%= register.user_type %>`;
+            }
+          </script>
+        <% } %>
+      </main>
+
+      <%- include("layouts/footer") %>
+    </div>
+    <%- include("layouts/scripts") %>
+
+    <script>
+      document.getElementById("signup").addEventListener("click", (evt)=>{
+        evt.preventDefault();
+        // document.getElementById("signup-modal").style.display = "block";
+        location.href = "/register";
+      })
+
+      document.getElementById("register_btn").addEventListener("click", (evt)=>{
+        evt.preventDefault(); 
+        let username = document.getElementById("signup_username").value;
+        let password = document.getElementById("signup_password").value;
+        let confirm_password = document.getElementById("signu_confirmp_password").value;
+        let user_type = document.getElementById("user-type-identity-dropdown").value;
+
+        if (username.length == 0 || password.length == 0 || confirm_password.length == 0) {
+          alert("Please input username and password");
+          return;
+        }
+        if (password != confirm_password) {
+          alert("The passwords entered twice are inconsistent");
+          return;
+        }
+
+        let data = {
+          username, password, user_type
+        }
+        postData("/user/register", data).then((result) => {
+          console.log("[g.ejs] post data to /g/query, result: ", result);
+          if (result.code == 0) {
+            window.location.href = '/login';
+          } else {
+            window.location.href = '/register';
+          }
+        })
+      })
+
+      document.getElementById("cancel_btn").addEventListener("click", (evt)=>{
+        evt.preventDefault();
+        // document.getElementById("signup-modal").style.display = "none";
+        location.href = "/login";
+      })
+    </script>
+
+  </body>
+</html>

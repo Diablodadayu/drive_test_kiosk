@@ -1,0 +1,18 @@
+<header class="mb-5">
+  <div>
+    <h3 class="float-md-start mb-0">Book DriveTest</h3>
+    <nav class="nav nav-masthead justify-content-center float-md-end">
+      <a class="nav-link fw-bold py-1 px-0" aria-current="page" href="/">DASHBOARD</a>
+      <% if(loggedInType == "driver") { %>
+      <a class="nav-link fw-bold py-1 px-0" href="/g2">G2_TEST</a>
+      <a class="nav-link fw-bold py-1 px-0" href="/g">G_TEST</a>
+      <% } %>
+      <% if(loggedInType) { %>
+      <a class="nav-link fw-bold py-1 px-0" href="/logout">LOGOUT</a>
+      <% } %>
+      <% if(!loggedInType) { %>
+      <a class="nav-link fw-bold py-1 px-0" href="/login">LOGIN</a>      
+      <% } %>
+    </nav>
+  </div>
+</header>

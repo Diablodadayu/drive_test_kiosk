@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100" data-bs-theme="auto">
+  <head>
+    <%- include("layouts/head") %>
+    <style>
+      table {
+        border-collapse: collapse;
+        margin: 50px auto;
+      }
+      td,
+      th {
+        border: 1px solid white;
+        padding: 10px 20px;
+      }
+    </style>
+  </head>
+  <body class="d-flex h-100 text-center text-bg-dark">
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      <%- include("layouts/header") %>
+
+      <main class="col-md-10 col-lg-10">
+
+        <div class="px-3">
+          <h1>G Test</h1>
+          <p class="lead">Please confirm your information</p>
+        </div>
+        <table id="userTable">
+          <tr>
+            <td>first name</td>
+            <td id="first_name"><%= userInfo?.first_name %></td>
+          </tr>
+          <tr>
+            <td>last name</td>
+            <td id="last_name"><%= userInfo?.last_name %></td>
+          </tr>
+          <tr>
+            <td>age</td>
+            <td id="age"><%= userInfo?.age %></td>
+          </tr>
+          <tr>
+            <td>make</td>
+            <td contenteditable="true" id="make"><%= userInfo?.car_details?.make %></td>
+          </tr>
+
+          <tr>
+            <td>model</td>
+            <td contenteditable="true" id="model"><%= userInfo?.car_details?.model %></td>
+          </tr>
+          <tr>
+            <td>year</td>
+            <td contenteditable="true" id="year"><%= userInfo?.car_details?.year %></td>
+          </tr>
+          <tr>
+            <td>plat number</td>
+            <td contenteditable="true" id="plat_no"><%= userInfo?.car_details?.platno %></td>
+          </tr>
+        </table>
+        <button class="w-50 btn btn-primary btn-lg" id="updateBtn" onclick="update()">
+          Update
+        </button>
+      </main>
+
+      <%- include("layouts/footer") %>
+    </div>
+    <%- include("layouts/scripts") %>
+
+    <script>
+
+      function update() {
+        let make = document.getElementById("make").innerHTML;
+        let year = document.getElementById("year").innerHTML;
+        let model = document.getElementById("model").innerHTML;
+        let platno = document.getElementById("plat_no").innerHTML;
+        let data = { 
+          car_details: {
+            make,
+            model,
+            year,
+            platno
+          }
+        }
+        postData("/g/update", data).then((data) => {
+          console.log(data); // JSON data parsed by `data.json()` call
+          let code = data.code;
+          if (code !== 0) {
+            alert("Update fail.")
+            return;
+          }
+          alert("Update success.");
+          
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en" class="h-100" data-bs-theme="auto">
+  <head>
+    <%- include("layouts/head") %>
+  </head>
+  <body class="d-flex h-100 text-center text-bg-dark">
+
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      <%- include("layouts/header") %>
+
+      <main class="col-md-10 col-lg-10">
+        <h4 class="mb-3">Personal Information</h4>
+        <% if(errors != null && errors.length >0) {  %>
+                            
+          <% for( var i=0 ; i < errors.length ; i++) { %> 
+              <div class="alert alert-danger">
+                  <%= errors[i]  %>
+              </div>
+          <% }%>
+      
+      <% } %>
+        <form class="needs-validation" novalidate="" method="post" action="/g2/register" enctype="multipart/form-data" id="registerForm">
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label for="firstName" class="form-label">First Name</label>
+              <input type="text" class="form-control" id="firstName" name="firstName" value="<%= userInfo?.first_name %>" required="">
+            </div>
+
+            <div class="col-sm-6">
+              <label for="lastName" class="form-label">Last Name</label>
+              <input type="text" class="form-control" id="lastName" name="lastName" value="<%= userInfo?.last_name %>" required="">
+            </div>
+
+            <div class="col-12">
+              <label for="license" class="form-label">License Number</label>
+              <div class="input-group has-validation">
+                <input type="text" class="form-control" id="license" name="licenseNo" value="<%= userInfo?.license_no %>" required="">
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label for="age" class="form-label">Age</label>
+              <input type="text" class="form-control" id="age" name="age" value="<%= userInfo?.age %>">
+            </div>
+
+          <hr class="my-4">
+
+          <h4 class="mb-3">Car Information</h4>
+
+          <div class="row g-3">
+            <div class="col-12">
+              <label for="make" class="form-label">Make</label>
+              <input type="text" class="form-control" id="make" name="make" value="<%= userInfo?.car_details?.make %>" required="">
+            </div>
+
+            <div class="col-12">
+              <label for="model" class="form-label">Model</label>
+              <input type="text" class="form-control" id="model" name="model" value="<%= userInfo?.car_details?.model %>" required="">
+            </div>
+
+            <div class="col-12">
+              <label for="year" class="form-label">Year</label>
+              <input type="text" class="form-control" id="year" name="year" value="<%= userInfo?.car_details?.year %>" required="">
+            </div>
+
+            <div class="col-12">
+              <label for="platno" class="form-label">Plat Number</label>
+              <input type="text" class="form-control" id="platno" name="platno" value="<%= userInfo?.car_details?.platno %>" required="">
+            </div>
+          </div>
+
+          <hr class="my-4">
+
+          <button class="w-100 btn btn-primary btn-lg" type="submit"><%= userInfo?.license_no?"Update":"Register" %></button>
+        </form>
+      </main>
+
+      <% if(userInfo?.license_no) { %>
+        <script>
+          document.getElementById("firstName").disabled = true;
+          document.getElementById("lastName").disabled = true;
+          document.getElementById("license").disabled = true;
+          document.getElementById("age").disabled = true;
+        </script>
+      <% } %>
+
+      <%- include("layouts/footer") %>
+    </div>
+    <%- include("layouts/scripts") %>
+
+    <script>
+      let registerForm = document.getElementById("registerForm");
+
+
+      registerForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        let licenseNo = document.getElementById("license").value;
+        let firstName = document.getElementById("firstName").value;
+        let lastName = document.getElementById("lastName").value;
+        let age = document.getElementById("age").value;
+        let make = document.getElementById("make").value;
+        let model = document.getElementById("model").value;
+        let year = document.getElementById("year").value;
+        let platno = document.getElementById("platno").value;
+
+        if (licenseNo=="" || firstName=="" || lastName=="" || age==""
+          || make=="" || model=="" || year=="" || platno=="") {
+          alert("Ensure you input all the information!");
+          return
+        }
+        let data = {
+          licenseNo, firstName, lastName, age, make, model, year, platno
+        }
+        postData("/g2/register", data).then((data) => {
+          console.log(data); // JSON data parsed by `data.json()` call
+          let code = data?.code;
+          if (code !== 0) {
+            alert("operation failure");
+            return;
+          }
+          alert("operation success");
+          location.href = "/g2";
+        });
+      });
+
+    </script>
+
+  </body>
+</html>
