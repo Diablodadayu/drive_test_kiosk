@@ -7,7 +7,7 @@ const flash = require('connect-flash');
 const mongoose = require("mongoose");
 
 const app = express();
-const port = 5600;
+const port = process.env.PORT || 5600;
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
