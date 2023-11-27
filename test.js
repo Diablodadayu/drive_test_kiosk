@@ -8,23 +8,37 @@
 // const md5 = require("md5");
 // console.log(md5("123456"));
 
-const bcrypt = require("bcrypt");
-const password = "123";
-bcrypt.hash(password, 10, (error, hash) => {
-    if (error) {
-      console.error(error);
-      return
-    }
-    console.log(hash);
+// const bcrypt = require("bcrypt");
+// const password = "123";
+// bcrypt.hash(password, 10, (error, hash) => {
+//     if (error) {
+//       console.error(error);
+//       return
+//     }
+//     console.log(hash);
 
-    bcrypt.compare(password.trim(), hash, (error, isSame) => {
-        if (isSame) {
-        console.log("isSame: ", isSame);
-        } else {
-        console.log("Form Password: " + password.trim());
-        console.log("Model Password: " + hash);
-        console.log('PASSWORD NOT MATCH');
+//     bcrypt.compare(password.trim(), hash, (error, isSame) => {
+//         if (isSame) {
+//         console.log("isSame: ", isSame);
+//         } else {
+//         console.log("Form Password: " + password.trim());
+//         console.log("Model Password: " + hash);
+//         console.log('PASSWORD NOT MATCH');
 
-        }
-    })
+//         }
+//     })
+// })
+
+let a = new Promise((resolve, reject)=>{
+  console.log(11)
+  resolve(1);
 })
+let b = new Promise((resolve, reject)=>{
+  console.log(33)
+  reject(2);
+})
+// let c = a
+// .then(data=>{
+//   console.log("1 ", data);
+// })
+// console.log(c);

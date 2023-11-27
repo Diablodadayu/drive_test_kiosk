@@ -80,7 +80,7 @@
           }
         }
         postData("/g/update", data).then((data) => {
-          console.log(data); // JSON data parsed by `data.json()` call
+          console.log(data);
           let code = data.code;
           if (code !== 0) {
             alert("Update fail.")

@@ -37,6 +37,7 @@ app.use(flash());
 app.use("/", require("./router/commonRoute.js"));
 app.use("/g", require("./router/gRoute.js"));
 app.use("/g2", require("./router/g2Route.js"));
+app.use("/appointment", require("./router/appointmentRoute.js"));
 
 const connString = "mongodb+srv://tyu3786:19871002mn@cluster0terence.65rjbtd.mongodb.net/";
 

@@ -7,6 +7,9 @@
       <a class="nav-link fw-bold py-1 px-0" href="/g2">G2_TEST</a>
       <a class="nav-link fw-bold py-1 px-0" href="/g">G_TEST</a>
       <% } %>
+      <% if(loggedInType == "admin") { %>
+        <a class="nav-link fw-bold py-1 px-0" href="/appointment">APPOINTMENT</a>
+      <% } %>
       <% if(loggedInType) { %>
       <a class="nav-link fw-bold py-1 px-0" href="/logout">LOGOUT</a>
       <% } %>

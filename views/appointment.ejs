@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en" class="h-100" data-bs-theme="auto">
+  <head>
+    <%- include("layouts/head") %>
+    <style>
+      .checkbox_container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        
+      }
+
+      .field_set{
+        border-color: white;
+        border-style: solid;
+        border-width: thick;
+        margin: 50px auto;
+      }
+
+    </style>
+  </head>
+  <body class="d-flex h-100 text-center text-bg-dark">
+
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      <%- include("layouts/header") %>
+
+      <main class="px-3">
+        <form method="post" action="/appointment/create" id="appointmentForm">
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Date</label>
+            <input type="date" class="form-control" id="date">
+          </div>
+          
+          <fieldset class="field_set" >
+            <legend>Choose the available slots:</legend>
+          
+            <div class="checkbox_container">
+              <div>
+                <input type="checkbox" id="900" name="horns" />
+                <label for="horns">9:00</label>
+              </div>
+            
+              <div>
+                <input type="checkbox" id="930" name="horns" />
+                <label for="horns">9:30</label>
+              </div>
+              <div>
+                <input type="checkbox" id="1000" name="horns" />
+                <label for="horns">10:00</label>
+              </div>
+              <div>
+                <input type="checkbox" id="1030" name="horns" />
+                <label for="horns">10:30</label>
+              </div>
+              <div>
+                <input type="checkbox" id="1100" name="horns" />
+                <label for="horns">11:00</label>
+              </div>
+              <div>
+                <input type="checkbox" id="1130" name="horns" />
+                <label for="horns">11:30</label>
+              </div>
+              <div>
+                <input type="checkbox" id="1200" name="horns" />
+                <label for="horns">12:00</label>
+              </div>
+              <div>
+                <input type="checkbox" id="1230" name="horns" />
+                <label for="horns">12:30</label>
+              </div>
+              <div>
+                <input type="checkbox" id="1300" name="horns" />
+                <label for="horns">13:00</label>
+              </div>
+              <div>
+                <input type="checkbox" id="1330" name="horns" />
+                <label for="horns">13:30</label>
+              </div>
+            </div>
+          </fieldset>
+          <button type="submit" class="w-100 btn btn-primary" id="create_btn">Create</button>
+        </form>
+      </main>
+
+      <%- include("layouts/footer") %>
+    </div>
+    <%- include("layouts/scripts") %>
+    <script>
+
+      let times = ["900", "930", "1000", "1030", "1100", "1130", "1200", "1230", "1300", "1330"];
+
+      // add listening callback when select a new date
+      let dateElem = document.getElementById("date")
+      dateElem.addEventListener("change", (event) => {
+        let date = dateElem.value;
+        if (!date) return;
+
+        // after select a new date, firstly make all slots available
+        for (time of times) {
+          let elem = document.getElementById(time);
+          elem.checked = false;
+          elem.disabled = false;
+        }
+
+        // get all slots which were already stored in database on that specified date, then make they disabled
+        postData("/appointment/query", {date}).then((data) => {
+          console.log(data);
+          let code = data?.code;
+          if (code !== 0) {
+            return;
+          }
+          let slots = data.data;
+          for (slot of slots) {
+            let time = slot.time;
+            time = time.replace(":", "");
+            let elem = document.getElementById(time);
+            elem.checked = true;
+            elem.disabled = true;
+          }
+        });
+      });
+
+      let appointmentForm = document.getElementById("appointmentForm");
+      appointmentForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        let data = [];
+        let date = dateElem.value;
+        if (!date) {
+          alert("Please input date!");
+          return;
+        }
+        date = new Date(date);
+
+        // after admin submit, send the selected slots to the server, the appointment controller will store them in database
+        for (let time of times) {
+          let checkboxElem = document.getElementById(time);
+          if (checkboxElem.disabled) {
+            continue;
+          }
+          if (checkboxElem.checked) {
+            let slot = time.substring(0, 1)+":"+time.substring(1, 3);
+            if (time.length == 4) {
+              slot = time.substring(0, 2)+":"+time.substring(2, 4);
+            }
+            data.push({
+              date, time: slot
+            });
+          }
+        }
+
+        if (data.length == 0) {
+          alert("Please select at least one slot!");
+          return;
+        }
+        
+        postData("/appointment/create", data).then((data) => {
+          console.log(data);
+          let code = data?.code;
+          if (code !== 0) {
+            alert("operation failure");
+            return;
+          }
+          alert("operation success");
+        });
+      });
+
+    </script>
+
+  </body>
+</html>

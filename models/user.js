@@ -5,35 +5,35 @@ const uniqueValidator = require('mongoose-unique-validator');
 const UserSchema = new mongoose.Schema({
     first_name: {
         type: String,
-        require: true,
+        required: true,
         default: "",
     },
     last_name: {
         type: String,
-        require: true,
+        required: true,
         default: "",
     },
     license_no: {
         type: String,
-        require: true,
+        required: true,
         default: "",
     },
     age: {
         type: Number,
-        require: true,
+        required: true,
     },
     username: {
         type: String,
-        require: true,
+        required: true,
         unique: true
     },
     password: {
         type: String,
-        require: true
+        required: true
     },
     user_type: {
         type: String,
-        require: true,
+        required: true,
         enum: ["driver", "examiner", "admin"]
     },
     car_details: {
@@ -41,6 +41,11 @@ const UserSchema = new mongoose.Schema({
         model: String,
         year: String,
         platno: String
+    },
+    appointment: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Appointment',
+        required: true,
     }
 });
 
